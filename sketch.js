@@ -15,7 +15,7 @@ let debug = false;
 let showFPS = false;
 
 let g_paint_mode = true;
-let g_scale_factor = 100;
+let g_scale_factor = 250;
 let g_point_size = 2;
 
 let entityManager;
@@ -94,6 +94,7 @@ function startScreen() {
 }
 
 function run() {
+    interval = sin(t)/8000;
     t += interval;
 
     if (entityManager.points.length < 100) {
