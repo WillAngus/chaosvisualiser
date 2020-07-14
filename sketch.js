@@ -9,14 +9,17 @@ let assets_called = 0;
 let total_assets;
 let assets_loaded = 0;
 
-let started = false;
+let started = true;
 let debug = false;
 let showFPS = false;
 
 let g_paint_mode = true;
-let g_scale_factor = 1000;
+let g_scale_factor = 300;
 let g_point_size = 2;
+let g_point_health = 500;
+let g_eq_num = 1;
 let g_zoom_speed = 0;
+let g_scene_length = 0.5;
 
 let entityManager;
 let entities = [];
@@ -69,12 +72,14 @@ function setup() {
 	frameRate(targetFramerate);
 }
 
-function initializeNewScene(time, i, scale_factor, point_size, zoom_speed) {
+function initializeNewScene(time, time_interval, scale_factor, point_size, zoom_speed, eq_num, scene_length) {
     t = time;
-    interval = i;
+    interval = time_interval;
     g_scale_factor = scale_factor;
     g_point_size = point_size;
     g_zoom_speed = zoom_speed;
+    g_eq_num = eq_num;
+    g_scene_length = scene_length;
 
     setup();
 }
@@ -88,8 +93,8 @@ function  draw() {
 	// Run visualiser once loading is complete otherwise show start screen
     loading || (started ? run() : startScreen());
     
-    fill(255);
-    text(t, 10, 25);
+    //fill(255);
+    //text(t, 10, 25);
 }
 
 function drawBackground() {
@@ -104,14 +109,17 @@ function startScreen() {
 }
 
 function run() {
-    //interval = sin(t)/8000;
     t += interval;
     g_scale_factor -= g_zoom_speed;
+    if (t > g_scene_length) {
+        initializeNewScene(0.2, 0.0001001, 1000, 2, 0, 2, 0.5);
+    }
+
+    if (keyIsDown(219)) g_scale_factor -= 50;
+    if (keyIsDown(221)) g_scale_factor += 50;
 
     if (entityManager.points.length < 500) {
-        entityManager.spawnPoint('point' + entityManager.points.lenth, t, t, g_point_size, 100);
-    } else {
-        entityManager.points[0].kill = true;
+        entityManager.spawnPoint('point' + entityManager.points.lenth, t, t, g_point_size, g_point_health, 100, g_eq_num);
     }
 
     entityManager.run();
@@ -127,8 +135,8 @@ function keyPressed() {
     if (key === '-') interval -= 0.0001;
     if (key === '=') interval += 0.0001;
 
-    if (key === '[') g_scale_factor -= 50;
-    if (key === ']') g_scale_factor += 50;
+    //if (key === '[') g_scale_factor -= 50;
+    //if (key === ']') g_scale_factor += 50;
 
     if (key === 'q') t -= 0.025;
     if (key === 'w') t += 0.025;

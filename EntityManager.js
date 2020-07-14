@@ -8,12 +8,8 @@ class EntityManager {
 	}
 	run() {
 		for (let i = this.entities.length-1; i >= 0; i--) {
-			let e = this.entities[i];
-			//if (e.kill) {
-			//	this.entities.splice(i, 1);
-			//	this.filterSkeletons();
-			//}
-
+            let e = this.entities[i];
+            
 			!e.kill || (this.entities.splice(i, 1), this.filterPoints()); 
 
 			this.showId ? e.showId = true : e.showId = false;
@@ -21,11 +17,11 @@ class EntityManager {
 			e.run();
 		}
 	}
-	spawnPoint(id, x, y, size, fill) {
+	spawnPoint(id, x, y, size, health, fill, eq_num) {
 		// Check maximum number of entities and spawn if within limit
 		if (this.entities.length < this.maximum) {
 			// Add new points to array of entities
-			this.entities.push(new Point(id, x, y, size, fill));
+			this.entities.push(new Point(id, x, y, size, health, fill, eq_num));
 			// Update array of points
 			this.filterPoints();
 		} else {
