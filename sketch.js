@@ -1,6 +1,5 @@
-let t = 0.5;
-//let interval = 0.0001;
-let interval = 0.0001;
+let t = 0.2;
+let interval = 0.000100001;
 let targetFramerate = 60;
 let delta;
 let canvas;
@@ -15,8 +14,9 @@ let debug = false;
 let showFPS = false;
 
 let g_paint_mode = true;
-let g_scale_factor = 250;
+let g_scale_factor = 1000;
 let g_point_size = 2;
+let g_zoom_speed = 0;
 
 let entityManager;
 let entities = [];
@@ -63,10 +63,20 @@ function setup() {
 	console.log('total assets : ' + total_assets);
 
 	// Create new entity manager and specify maximum entities allowed to be rendered
-    entityManager  = new EntityManager(1000);
+    entityManager  = new EntityManager(5000);
     
     // Set project refresh rate
 	frameRate(targetFramerate);
+}
+
+function initializeNewScene(time, i, scale_factor, point_size, zoom_speed) {
+    t = time;
+    interval = i;
+    g_scale_factor = scale_factor;
+    g_point_size = point_size;
+    g_zoom_speed = zoom_speed;
+
+    setup();
 }
 
 function  draw() {
@@ -94,10 +104,11 @@ function startScreen() {
 }
 
 function run() {
-    interval = sin(t)/8000;
+    //interval = sin(t)/8000;
     t += interval;
+    g_scale_factor -= g_zoom_speed;
 
-    if (entityManager.points.length < 100) {
+    if (entityManager.points.length < 500) {
         entityManager.spawnPoint('point' + entityManager.points.lenth, t, t, g_point_size, 100);
     } else {
         entityManager.points[0].kill = true;
@@ -106,39 +117,21 @@ function run() {
     entityManager.run();
 }
 
-// Point : new Point(id, x, y, size)
-class Point {
-    constructor(id, x, y, size, fill) {
-        this.entityType = 'point';
-        this.showId = false;
-        this.id = id;
-        this.x = x;
-        this.y = y;
-        this.size = size;
-        this.fill = fill;
-    }
-    update() {
-        //this.x = (Math.pow(this.x, 2) - Math.pow(this.y, 2) - Math.pow(t, 2) - this.x - t);
-        //this.y = (Math.pow(this.y, 2) - Math.pow(t, 2) - (this.x * this.y) - this.y - t);
-        
-        this.x = (Math.pow(this.x, 2) + Math.pow(this.y, 2) - Math.pow(t, 2) - this.x - t);
-        this.y = (Math.pow(this.y, 2) + Math.pow(t, 2) - (this.x * this.y) - this.y - t);
-        //this.x = t;
-        //this.y = t;
-    }
-    display() {
-        //colorMode(HSB);
-        fill(random(150, 250), random(25, 75), random(50, 100));
-        noStroke();
-        push();
-        translate(this.x * g_scale_factor, this.y * g_scale_factor);
-        ellipse(width/2, height/2, this.size);
-        pop();
-    }
-    run() {
-        this.update();
-        this.display();
-    }
+function keyPressed() {
+    if (key === '1') t = 0.1;
+    if (key === '2') t = 0.2;
+    if (key === '3') t = 0.3;
+    if (key === '4') t = 0.4;
+    if (key === '5') t = 0.5;
+
+    if (key === '-') interval -= 0.0001;
+    if (key === '=') interval += 0.0001;
+
+    if (key === '[') g_scale_factor -= 50;
+    if (key === ']') g_scale_factor += 50;
+
+    if (key === 'q') t -= 0.025;
+    if (key === 'w') t += 0.025;
 }
 
 // Allow audio after initiating touch
