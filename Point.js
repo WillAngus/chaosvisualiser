@@ -37,6 +37,12 @@ class Point {
             this.y = Math.pow(this.y, 2) - (this.y * t) + t + this.x - (this.x * t) - this.y;
         }
 
+        if (this.eq_num == 4) {
+            //initializeNewScene(0, 0.001001, 200, 2, 0, 4, 10);
+            this.x = Math.pow(this.x, 2) - (this.y * t) + sin(t) - sin(this.x);
+            this.y = Math.pow(this.y, 2) - (this.x * t) - cos(t) - this.y;
+        }
+
         //this.x = (Math.pow(this.x, 2) + Math.pow(this.y, 2) - Math.pow(t, 2) - this.x - t);
         //this.y = (Math.pow(this.y, 2) + Math.pow(t, 2) - (this.x * this.y) - this.y - t);
 
