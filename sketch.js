@@ -54,47 +54,47 @@ function loadAsset(type, url) {
 }
 
 function preload() {
-    png_playButton = loadAsset('image', 'assets/img/play_button.png');
+	png_playButton = loadAsset('image', 'assets/img/play_button.png');
 }
 
 function setup() {
-    // Create screen for rendering onto
-	canvas         = createCanvas(windowWidth, windowHeight);
+	// Create screen for rendering onto
+	canvas = createCanvas(windowWidth, windowHeight);
 
 	// Define total number of assets based on amount of assets called in preload()
-	total_assets   = assets_called;
+	total_assets = assets_called;
 	console.log('total assets : ' + total_assets);
 
 	// Create new entity manager and specify maximum entities allowed to be rendered
-    entityManager  = new EntityManager(5000);
-    
-    // Set project refresh rate
+	entityManager = new EntityManager(5000);
+
+	// Set project refresh rate
 	frameRate(targetFramerate);
 }
 
 function initializeNewScene(time, time_interval, scale_factor, point_size, zoom_speed, eq_num, scene_length) {
-    t = time;
-    interval = time_interval;
-    g_scale_factor = scale_factor;
-    g_point_size = point_size;
-    g_zoom_speed = zoom_speed;
-    g_eq_num = eq_num;
-    g_scene_length = scene_length;
+	t = time;
+	interval = time_interval;
+	g_scale_factor = scale_factor;
+	g_point_size = point_size;
+	g_zoom_speed = zoom_speed;
+	g_eq_num = eq_num;
+	g_scene_length = scene_length;
 
-    setup();
+	setup();
 }
 
-function  draw() {
-    drawBackground();
+function draw() {
+	drawBackground();
 
 	// Set loading to false once all assets loaded
 	assets_loaded == total_assets && (loading = false);
 
 	// Run visualiser once loading is complete otherwise show start screen
-    loading || (started ? run() : startScreen());
-    
-    //fill(255);
-    //text(t, 10, 25);
+	loading || (started ? run() : startScreen());
+
+	//fill(255);
+	//text(t, 10, 25);
 }
 
 function drawBackground() {
@@ -109,37 +109,37 @@ function startScreen() {
 }
 
 function run() {
-    t += interval;
-    g_scale_factor -= g_zoom_speed;
-    if (t > g_scene_length) {
-        initializeNewScene(0.2, 0.0001001, 1000, 2, 0, 2, 0.5);
-    }
+	t += interval;
+	g_scale_factor -= g_zoom_speed;
+	if (t > g_scene_length) {
+		initializeNewScene(0.2, 0.0001001, 1000, 2, 0, 2, 0.5);
+	}
 
-    if (keyIsDown(219)) g_scale_factor -= 50;
-    if (keyIsDown(221)) g_scale_factor += 50;
+	if (keyIsDown(219)) g_scale_factor -= 50;
+	if (keyIsDown(221)) g_scale_factor += 50;
 
-    if (entityManager.points.length < 500) {
-        entityManager.spawnPoint('point' + entityManager.points.lenth, t, t, g_point_size, g_point_health, 100, g_eq_num);
-    }
+	if (entityManager.points.length < 500) {
+		entityManager.spawnPoint('point' + entityManager.points.lenth, t, t, g_point_size, g_point_health, 100, g_eq_num);
+	}
 
-    entityManager.run();
+	entityManager.run();
 }
 
 function keyPressed() {
-    if (key === '1') t = 0.1;
-    if (key === '2') t = 0.2;
-    if (key === '3') t = 0.3;
-    if (key === '4') t = 0.4;
-    if (key === '5') t = 0.5;
+	if (key === '1') t = 0.1;
+	if (key === '2') t = 0.2;
+	if (key === '3') t = 0.3;
+	if (key === '4') t = 0.4;
+	if (key === '5') t = 0.5;
 
-    if (key === '-') interval -= 0.0001;
-    if (key === '=') interval += 0.0001;
+	if (key === '-') interval -= 0.0001;
+	if (key === '=') interval += 0.0001;
 
-    //if (key === '[') g_scale_factor -= 50;
-    //if (key === ']') g_scale_factor += 50;
+	//if (key === '[') g_scale_factor -= 50;
+	//if (key === ']') g_scale_factor += 50;
 
-    if (key === 'q') t -= 0.025;
-    if (key === 'w') t += 0.025;
+	if (key === 'q') t -= 0.025;
+	if (key === 'w') t += 0.025;
 }
 
 // Allow audio after initiating touch
